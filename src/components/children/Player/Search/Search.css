@@ -1,0 +1,35 @@
+.searchInput {
+display: inline-block;
+position: relative;
+font-family: 'Raleway', sans-serif;
+}
+.input {
+ margin-top: 5%;
+ border: none;
+ height: 5vh;
+ font-size: 20px;
+ font-family: 'Raleway', sans-serif;
+}
+.button {
+ height: 5.2vh;
+ background: white;
+ border: none;
+ position: absolute;
+ bottom: 0;
+ border-radius: 0;
+}
+.button:hover {
+ cursor: pointer;
+}
+#getListButton {
+ margin-left:60px;
+}
+#dropdown {
+ margin-right: 50px;
+ border: 10px solid white;
+ border-radius: 0;
+ margin-right: 50%;
+	-webkit-border-radius: 0;
+	outline: .1px inset white;
+	outline-offset: -1px;
+}

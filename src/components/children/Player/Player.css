@@ -1,0 +1,43 @@
+.selectionListWrapper {
+ height: 20vh;
+ position: fixed;
+ bottom: 20%;
+ margin: 100px 50px;
+ width: 30%;
+ display: flex;
+ flex-direction: column;
+}
+.selectionList {
+ float: left;
+ color: white;
+ font-size: 20px;
+ -webkit-box-shadow: 0px 0px 29px 8px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 29px 8px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 29px 8px rgba(0,0,0,0.75);
+padding: 20px;
+background-color: rgba(0,0,0,0);
+font-family: 'Raleway', sans-serif;
+}
+#myButton {
+ position: fixed;
+ top: 10%;
+ left: 7%;
+ border: none;
+}
+#myButton:hover {
+ cursor: pointer;
+ 
+}
+.rosterList {
+ margin: 10px auto;
+ width: 20%;
+ color: white;
+ border: 1px solid white;
+}
+h1 {
+ color: white;
+}
+.displayPlayerPosition {
+ margin: 5% auto;
+ width: 20%;
+}

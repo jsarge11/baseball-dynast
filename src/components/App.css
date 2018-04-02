@@ -1,0 +1,19 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  background: url("../img/bball-field.jpg") center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.App {
+  text-align: center;
+  height: 100%;
+}
+.logo {
+  position: fixed;
+  bottom: 10px; 
+  right: 10px;
+}
