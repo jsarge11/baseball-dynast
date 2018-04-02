@@ -3,6 +3,9 @@ import axios from 'axios'
 import Search from './Search/Search.js'
 import Stats from './Stats/Stats.js'
 import './Player.css'
+import Create from './Create/Create.js'
+import CardList from './Card/CardList.js'
+import ActiveCard from './Card/ActiveCard.js'
 
 
 export default class Player extends Component {
@@ -20,6 +23,8 @@ export default class Player extends Component {
    activeCards: [],
    hitter: {},
    pitcher: {},
+   textToAdd: '',
+   toBeEdited: {},
   }
 
   this.setStatistics = this.setStatistics.bind ( this );
@@ -27,6 +32,10 @@ export default class Player extends Component {
   this.updateFirstName = this.updateFirstName.bind ( this );
   this.updateLastName = this.updateLastName.bind ( this );
   this.updateYear = this.updateYear.bind( this );
+  this.addToRoster = this.addToRoster.bind ( this );
+  this.deleteFromRoster = this.deleteFromRoster.bind ( this );
+  this.editStats = this.editStats.bind ( this );
+  this.put = this.put.bind( this );
  }
 
 updateFirstName(name) {
@@ -37,6 +46,9 @@ updateLastName(name) {
 }
 updateYear(year) {
   this.setState({ year: year})
+}
+updateText(text) {
+  this.setState({ textToAdd: text})
 }
 
 setStatistics(item) { //<<--------------------------------- BEGINNING OF SETSTATISTICS --------------------------------->
@@ -74,6 +86,7 @@ if (item.player.Position === "P") {
 
    pitcher.name = res.data.cumulativeplayerstats.playerstatsentry[0].player.LastName;
    pitcher.year = this.state.year;
+   pitcher.id = res.data.cumulativeplayerstats.playerstatsentry[0].player.ID;
    pitcher.battersFaced = +data.TotalBattersFaced['#text']
    pitcher.hits = totalHits;
    pitcher.walks = +data.PitcherWalks['#text'] + +data.BattersHit['#text'] + +data.PitcherIntentionalWalks['#text'];
@@ -104,6 +117,7 @@ if (item.player.Position === "P") {
    let totalHits = +data.Homeruns['#text'] + +data.Hits['#text'] + +data.ThirdBaseHits['#text'] + +data.SecondBaseHits['#text'];
 
    hitter.name = res.data.cumulativeplayerstats.playerstatsentry[0].player.LastName;
+   hitter.id = res.data.cumulativeplayerstats.playerstatsentry[0].player.ID;
    hitter.year = this.state.year; 
    hitter.plateAppearances = +data.PlateAppearances['#text'];
    hitter.hits = totalHits;
@@ -115,6 +129,7 @@ if (item.player.Position === "P") {
    hitter.putOutPercent = Math.round((hitter.putOuts / hitter.plateAppearances) * 100);
    hitter.combinedPercent = hitter.hitPercent + hitter.walkPercent + hitter.putOutPercent;
    hitter.onBaseOtherPercent = 100 - hitter.combinedPercent;
+  
 
    this.setState({ hitter: hitter })
   
@@ -172,7 +187,6 @@ if (item.player.Position === "P") {
 //item is pulled from the clicked item
 addToRoster(item) {
  if (this.state.activeCards.length === 0) {
-      console.log(item.player.Position);
       if (item.player.Position !== "P") {
         alert('Please choose a pitcher first.');
       }
@@ -226,81 +240,73 @@ deleteFromRoster(item) {
   })
  
 }
+editStats(item) {
+  document.getElementById("edit").style.display = "block";
+  this.setState({ toBeEdited: item })
+ 
+}
+put() {
+  let url = `${this.props.my_api}${this.state.toBeEdited.id}`
+  let textToAdd = this.state;
+  axios.put(url, { textToAdd }).then (response => {
+
+      this.setState({ activeCards: response.data })
+    });
+
+  this.setState({ textToAdd: '' })
+  this.closeSpan();
+}
+
+closeSpan() {
+  document.getElementById("edit").style.display = "none";
+}
 
 render() {
 
  let displayList = this.state.cards.map((item, index) => {
-   return (
-    <div className="rosterList" key={item + index}>
-     <div>
-     </div>
-     <div key={item + index}>
-      <div>
-       Player: {`${item.player.FirstName} ${item.player.LastName}`}
-      </div>
-      <div>
-       Team: {`${item.team.City} ${item.team.Name}`}<br/>
-       ID: {`${item.player.ID}`}
-      </div>
-      <button onClick={()=>this.addToRoster(item)}></button>
-     </div>
-    </div>
-   );
-   
+    return (
+      <CardList newItem={item} 
+      addToRoster={this.addToRoster}
+      index={index}
+      /> 
+  );
  })
 
  let displayPlayerPosition = ''; 
 
   if (this.state.activeCards.length === 0) {
-    displayPlayerPosition = <div className='displayPlayerPosition'><h1>To start, choose a pitcher.</h1></div>
+    displayPlayerPosition = <div className='displayPlayerPosition'><h1>To start, search for a pitcher.</h1></div>
   }
   else if (this.state.activeCards.length === 1) {
-    displayPlayerPosition = <div className='displayPlayerPosition'><h1>Next, choose a batter.</h1></div>
+    displayPlayerPosition = <div className='displayPlayerPosition'><h1>Next, search for a batter.</h1></div>
   }
   else {
     displayPlayerPosition = <div className='displayPlayerPosition'><h1>Hit predict outcome to compare their statistics and see a likely outcome!</h1></div>
   }
 
- let position = ``;
- let pitcher = ``
- let batter = ``;
-
+ 
  let selectionList = this.state.activeCards.map((item, index) => {
-
- console.log(this.state.activeCards.length);
-
- if (this.state.activeCards.length === 1) {
-   pitcher = `Pitcher: ${item.item.player.FirstName} ${item.item.player.LastName}`;
- }
- else {
-   batter = `Batter: ${item.item.player.FirstName} ${item.item.player.LastName}`
-   position = `Position: ${item.item.player.Position}`;
- }
-
+  let pos = item.item.player.Position;
+  let position = {};
+  if (pos === 'P') {
+    position = this.state.pitcher;
+  }
+  else {
+    position = this.state.hitter
+  }
    if (item) {
   return (
-   <div className="searchList" key={item + index}>
-    <hr/>
-     <div>
-     <span onClick={()=>this.deleteFromRoster(item)} className="close">&times;</span>
-      <div>
-       
-      </div>
-      <div>
-       {pitcher}
-       {position}
-      </div>
-      <div>
-      {batter}
-       Team: {`${item.item.team.City} ${item.item.team.Name}`} <br/>
-      </div>
-      
-      <hr/>
-     </div>
-   </div>
+    <ActiveCard position={position}
+    newItem={item}
+    deleteFromRoster={this.deleteFromRoster}
+    editStats={this.editStats}
+    index={index}
+    
+    />
   );
 }
  })
+
 
 
   return (
@@ -314,7 +320,20 @@ render() {
       year={this.state.year}
       whenClicked={this.getData} 
       />
+
+      <Create my_api={this.props.my_api}
+      addToRoster={this.addToRoster}
+
+      />
+
       {displayPlayerPosition}
+     </div>
+     <div id="edit" className="editModal">
+      <div className="editModalContent">
+        <input id="inputButton" type="text" placeholder="enter new name" onChange={(e)=>this.updateText(e.target.value)} value={this.state.textToAdd}/>
+        <button onClick={()=>this.put()}>Change Name</button>
+        <span onClick={()=>this.closeSpan()} className="close">&times;</span>
+      </div>
      </div>
      <br/>
      {displayList}

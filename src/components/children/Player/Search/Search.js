@@ -8,8 +8,6 @@ export default function Search(props) {
     <input className="input" id="firstName" onChange={(e)=>props.updateFirst(e.target.value)} placeholder="first name" value={props.firstName}/> 
     <input className="input" id="lastName" onChange={(e)=>props.updateLast(e.target.value)} placeholder="last name" value={props.lastName}/>
 
-   
-
     <select onChange={(e)=>props.updateYear(e.target.value)} id="dropdown" className="button">
         <option value="2016">2016</option>
         <option value="2017">2017</option>
