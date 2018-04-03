@@ -15,7 +15,6 @@ export default function ActiveCard(props) {
      Team: {`${props.newItem.item.team.City} ${props.newItem.item.team.Name}`} <br/> 
     </div> 
     <div>
-     {props.position.id}
      <span onClick={()=>props.editStats(props.position)} className="edit">	&#9999;</span>
     </div>
     <hr/>

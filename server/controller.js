@@ -24,7 +24,6 @@ create: (req, res) => {
   res.status(200).send( newArr );
  },
  delete: (req, res) => {
-   console.log(req.params)
     activeCards.map((item, index, arr)=> {
     if (item.item.player.ID === req.params.id) {
       arr.splice(index, 1);

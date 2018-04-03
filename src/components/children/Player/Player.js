@@ -6,6 +6,7 @@ import './Player.css'
 import Create from './Create/Create.js'
 import CardList from './Card/CardList.js'
 import ActiveCard from './Card/ActiveCard.js'
+import StatsList from './Stats/StatsList.js'
 
 
 export default class Player extends Component {
@@ -86,7 +87,7 @@ if (item.player.Position === "P") {
 
    pitcher.name = res.data.cumulativeplayerstats.playerstatsentry[0].player.LastName;
    pitcher.year = this.state.year;
-   pitcher.id = res.data.cumulativeplayerstats.playerstatsentry[0].player.ID;
+   pitcher.ID = res.data.cumulativeplayerstats.playerstatsentry[0].player.ID;
    pitcher.battersFaced = +data.TotalBattersFaced['#text']
    pitcher.hits = totalHits;
    pitcher.walks = +data.PitcherWalks['#text'] + +data.BattersHit['#text'] + +data.PitcherIntentionalWalks['#text'];
@@ -117,7 +118,7 @@ if (item.player.Position === "P") {
    let totalHits = +data.Homeruns['#text'] + +data.Hits['#text'] + +data.ThirdBaseHits['#text'] + +data.SecondBaseHits['#text'];
 
    hitter.name = res.data.cumulativeplayerstats.playerstatsentry[0].player.LastName;
-   hitter.id = res.data.cumulativeplayerstats.playerstatsentry[0].player.ID;
+   hitter.ID = res.data.cumulativeplayerstats.playerstatsentry[0].player.ID;
    hitter.year = this.state.year; 
    hitter.plateAppearances = +data.PlateAppearances['#text'];
    hitter.hits = totalHits;
@@ -186,6 +187,7 @@ if (item.player.Position === "P") {
 }
 //item is pulled from the clicked item
 addToRoster(item) {
+  //console.log(item.item.player);
  if (this.state.activeCards.length === 0) {
       if (item.player.Position !== "P") {
         alert('Please choose a pitcher first.');
@@ -201,7 +203,19 @@ addToRoster(item) {
           cards.splice(i,1);
         }
         }
-        this.setStatistics(item);
+
+        if (!item.created) {
+          this.setStatistics(item);
+        }
+        else {
+          let isPitcher = (item.player.Position = 'P') ? true : false;
+          if (isPitcher) {
+            this.setState({ pitcher : item.player })
+          }
+          else {
+            this.setState({ hitter : item.player })
+          }
+        }
 
         axios.post(my_api, { item } ).then((res)=> {
         if (res) {
@@ -243,10 +257,11 @@ deleteFromRoster(item) {
 editStats(item) {
   document.getElementById("edit").style.display = "block";
   this.setState({ toBeEdited: item })
- 
 }
+
 put() {
-  let url = `${this.props.my_api}${this.state.toBeEdited.id}`
+  console.log(`NEW: ${JSON.stringify(this.state.toBeEdited, null, 2)}`)
+  let url = `${this.props.my_api}${this.state.toBeEdited.ID}`
   let textToAdd = this.state;
   axios.put(url, { textToAdd }).then (response => {
 
@@ -286,16 +301,19 @@ render() {
 
  
  let selectionList = this.state.activeCards.map((item, index) => {
-  let pos = item.item.player.Position;
   let position = {};
+  let pos = item.item.player.Position;
+
   if (pos === 'P') {
     position = this.state.pitcher;
   }
   else {
     position = this.state.hitter
   }
+
    if (item) {
-  return (
+    
+    return (
     <ActiveCard position={position}
     newItem={item}
     deleteFromRoster={this.deleteFromRoster}
@@ -332,6 +350,7 @@ render() {
       <div className="editModalContent">
         <input id="inputButton" type="text" placeholder="enter new name" onChange={(e)=>this.updateText(e.target.value)} value={this.state.textToAdd}/>
         <button onClick={()=>this.put()}>Change Name</button>
+          <StatsList player={this.state.toBeEdited} />
         <span onClick={()=>this.closeSpan()} className="close">&times;</span>
       </div>
      </div>

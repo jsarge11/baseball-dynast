@@ -23,12 +23,13 @@ export default class Create extends Component {
     onBaseOtherPercent: 0,
     onBaseOnError: 0,
     Position: 'P',
-    created: true,
+    ID: String((Math.floor((Math.random() * 1000)))),
    },
    team: {
-    City: 'sdf',
-    Name: 'sdf',
+    City: 'Custom',
+    Name: 'Player',
    },
+   created: true,
   }
  }
 }
@@ -58,30 +59,34 @@ export default class Create extends Component {
   this.setState({ item: temp })
  }
  updateFirst(e) {
-  console.log(e);
-  let temp = Object.assign({}, this.state.item.player, { FirstName : e } );
-  console.log(temp);
-  this.setState({ item: temp });
+  let temp = Object.assign({}, this.state.item);
+  temp.player.FirstName = e;
+  this.setState({ item : temp});
+
  }
  updateLast(e) {
-  let temp = Object.assign({}, this.state.item, { player: { LastName:e } } );
-  console.log(temp);
+  let temp = Object.assign({}, this.state.item);
+  temp.player.LastName = e;
   this.setState({ item: temp });
  }
  updatePA(e) {
-  let temp = Object.assign({}, this.state.item, { player: { plateappearances:e } });
+  let temp = Object.assign({}, this.state.item);
+  temp.player.plateappearances = e;
   this.setState({ item: temp });
  }
  updateWalks(e) {
-  let temp = Object.assign({}, this.state.item, { player: { walks:e } });
+  let temp = Object.assign({}, this.state.item);
+  temp.player.walks = e;
   this.setState({ item: temp });
- }
+}
  updateHits(e) {
-  let temp = Object.assign({}, this.state.item, { player: { hits:e } });
+  let temp = Object.assign({}, this.state.item);
+  temp.player.hits = e;
   this.setState({ item: temp });
  }
  updateOuts(e) {
-  let temp = Object.assign({}, this.state.item, { player: { outs:e } });
+  let temp = Object.assign({}, this.state.item);
+  temp.player.outs = e;
   this.setState({ item: temp });
  }
  updateOnBaseOnError(e) {
@@ -89,7 +94,6 @@ export default class Create extends Component {
   // this.setState({ player: temp });
  }
  updatePosition(e) {
-  console.log(e);
   if (e === 'Pitcher') {
    document.getElementById("plateAppearanceOrBatterFaced").innerHTML = `Batters Faced: `;
   }
@@ -108,9 +112,6 @@ export default class Create extends Component {
  createPlayer() {
   let { FirstName, LastName, plateappearances } = this.state.item.player;
 
-  console.log(`'${FirstName}''${LastName}'`);
-  console.log(`${plateappearances}`);
-
   if (!FirstName || !LastName) {
    document.getElementById("alertReq").innerHTML = `Please fill out both name fields!`;
   }
@@ -119,8 +120,7 @@ export default class Create extends Component {
   }
   else {
    this.closeSpan();
-   console.log("Before Send" + JSON.stringify(this.state));
-  // this.props.addToRoster(this.state);
+   this.props.addToRoster(this.state.item);
 
   }
  }
