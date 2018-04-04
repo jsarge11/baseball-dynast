@@ -14,7 +14,7 @@ export default function Search(props) {
         <option value="2018">2018</option>
     </select>
 
-     <button className="button" id="getListButton" onClick={props.whenClicked} type="button"><img src={mg_img} height="40px"/></button>
+     <button className="button" id="getListButton" onClick={props.whenClicked} type="button"><img src={mg_img} height="40px" alt="search"/>></button>
   </div>
  );
 }

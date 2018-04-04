@@ -308,7 +308,7 @@ render() {
     position = this.state.pitcher;
   }
   else {
-    position = this.state.hitter
+    position = this.state.hitter;
   }
 
    if (item) {
@@ -321,8 +321,12 @@ render() {
     index={index}
     
     />
+
   );
 }
+  else {
+    return {};
+  }
  })
 
 

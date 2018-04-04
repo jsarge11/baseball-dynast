@@ -11,7 +11,7 @@ export default function CardList(props) {
      </div>
      <div>
       Team: {`${props.newItem.team.City} ${props.newItem.team.Name}`}<br/>
-      ID: {`${props.newItem.player.ID}`}
+      Position: {`${props.newItem.player.Position}`}
      </div>
      <button onClick={()=>props.addToRoster(props.newItem)}></button>
     </div>

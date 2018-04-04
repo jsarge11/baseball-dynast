@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import './stats.css'
 
 
@@ -36,7 +35,6 @@ export default class Stats extends Component {
  predictOutcome() {
   var modal = document.getElementById('myModal');
   let tempMessage = '';
-  let tempMessages = [];
 
   if (this.props.activeCards.length < 2) {
    let message = (this.props.activeCards.length === 1) ? `Please add another player` : `You have no players selected!`;
@@ -74,14 +72,14 @@ closeSpan() {
   
   return (
    <div className="stats">
-      <button id="myButton" className="selectionList" onClick={()=>this.predictOutcome()} >Predict Outcome</button><br/>
+      <button className="predictOutcome" onClick={()=>this.predictOutcome()} >Predict Outcome</button><br/>
 
       <div id="myModal" className="modal">
 
          <div className="modal-content">
            <span onClick={()=>this.closeSpan()} className="close">&times;</span>
           
-           <button onClick={()=>this.predictOutcome()} id="predictButton"> Go Again </button>
+           <button onClick={()=>this.predictOutcome()} className="predictOutcome"> Go Again </button>
            <br/>
            {`Based off of ${this.props.pitcher.name}'s performance in ${this.props.pitcher.year}, and ${this.props.hitter.name}'s performance in ${this.props.hitter.year}`}
            <br/>

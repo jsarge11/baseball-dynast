@@ -22,7 +22,6 @@
  border: 1px solid #888;
  width: 80%; /* Could be more or less, depending on screen size */
  height: 30%;
- font-size: 25px;
 }
 
 /* The Close Button */
@@ -39,6 +38,31 @@
  text-decoration: none;
  cursor: pointer;
 }
-.predictButton {
- float: right;
+.predictOutcome {
+ position: fixed;
+ top: 10%;
+ left: 7%;
+ border: none;
+ cursor: pointer;
+ float: left;
+ color: white;
+ font-size: 20px;
+ -webkit-box-shadow: 0px 0px 29px 8px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 29px 8px rgba(0,0,0,0.75);
+ box-shadow: 0px 0px 29px 8px rgba(0,0,0,0.75);
+ padding: 20px;
+ background-color: rgba(0,0,0,0);
+ font-family: 'Raleway', sans-serif;
+}
+.predictOutcome:hover {
+ color: blue;
+}
+.predictOutcome:active {
+ color: red;
+}
+h3 {
+ font-size: 30px;
+}
+p {
+ font-size: 20px;
 }
